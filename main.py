@@ -1,16 +1,28 @@
-# This is a sample Python script.
+from quiz_model import Question
+from quiz_data import question_data
+from quiz_brain import QuizBrain
+from quiz_ui import QuizInterface
+from random import shuffle
+import html
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+question_bank = []
+for question in question_data:
+    choices = []
+    question_text = html.unescape(question["question"])
+    correct_answer = html.unescape(question["correct_answer"])
+    incorrect_answers = question["incorrect_answers"]
+    for ans in incorrect_answers:
+        choices.append(html.unescape(ans))
+    choices.append(correct_answer)
+    shuffle(choices)
+    new_question = Question(question_text, correct_answer, choices)
+    question_bank.append(new_question)
 
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+quiz = QuizBrain(question_bank)
+
+quiz_ui = QuizInterface(quiz)
 
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+print("You've completed the quiz")
+print(f"Your final score was: {quiz.score}/{quiz.question_no}")
